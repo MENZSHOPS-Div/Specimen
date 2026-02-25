@@ -1,6 +1,6 @@
 /********** Template CSS **********/
 :root {
-   
+      --primary: #009CFF;
     --light: #F3F6F9;
     --dark: #191C24;
     --blue-50: #eaf7ff;
@@ -280,5 +280,6 @@
     border-color: var(--primary);
 
 }
+
 
 
