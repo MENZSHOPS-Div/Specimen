@@ -3,6 +3,10 @@
     --primary: #04a7cf;
     --light: #F3F6F9;
     --dark: #191C24;
+    --blue-50: #eaf7ff;
+    --blue-100: #d6f0ff;
+    --blue-500: #3bb3d6;
+    --blue-600: #229ec4;
 }
 
 .back-to-top {
@@ -276,3 +280,4 @@
     border-color: var(--primary);
 
 }
+
