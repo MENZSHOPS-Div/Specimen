@@ -436,34 +436,34 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     }
 
     // ====== LOAD DATA SHEET ======
-    function loadDataSheet() {
-      if (!workbook) return;
+   function loadDataSheet() {
+  if (!workbook) return;
 
-      const dataName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "data");
-      if (!dataName) {
-        cachedData = [];
-        return showError('ไม่พบชีตชื่อ "Data"');
-      }
+  // ✅ เปลี่ยนเป็น PreData (ตัวพิมพ์เล็ก/ใหญ่ไม่สำคัญ เพราะเราใช้ toLowerCase())
+  const dataName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "predata");
+  if (!dataName) {
+    cachedData = [];
+    return showError('ไม่พบชีตชื่อ "PreData"');
+  }
 
-      const ws = workbook.Sheets[dataName];
-      const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
-      const body = aoa.slice(1);
+  const ws = workbook.Sheets[dataName];
+  const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+  const body = aoa.slice(1);
 
-      cachedData = body
-        .filter(r => normalizeId(r?.[0]) !== "")
-        .map(r => {
-          const idRaw = r?.[0];
-          const c = String(r?.[2] ?? "").trim();
-          const d = String(r?.[3] ?? "").trim();
-          const e = String(r?.[4] ?? "").trim();
-          return {
-            id: String(idRaw ?? "").trim(),
-            idNorm: normalizeId(idRaw),
-            name: [c, d, e].filter(Boolean).join(" ")
-          };
-        });
-    }
-
+  cachedData = body
+    .filter(r => normalizeId(r?.[0]) !== "")
+    .map(r => {
+      const idRaw = r?.[0];
+      const c = String(r?.[2] ?? "").trim();
+      const d = String(r?.[3] ?? "").trim();
+      const e = String(r?.[4] ?? "").trim();
+      return {
+        id: String(idRaw ?? "").trim(),
+        idNorm: normalizeId(idRaw),
+        name: [c, d, e].filter(Boolean).join(" ")
+      };
+    });
+}
     // ====== SEARCH ======
     function submitSearch(e) {
       if (e) e.preventDefault();
@@ -702,5 +702,6 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
