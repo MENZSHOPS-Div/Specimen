@@ -458,11 +458,14 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     }
 
     // ====== LOAD DATA SHEET ======
-   function loadDataSheet() {
+function loadDataSheet() {
   if (!workbook) return;
 
-  // ✅ เปลี่ยนเป็น PreData (ตัวพิมพ์เล็ก/ใหญ่ไม่สำคัญ เพราะเราใช้ toLowerCase())
-  const dataName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "predata");
+  // ✅ เปลี่ยนจาก "Data" เป็น "PreData"
+  const dataName = workbook.SheetNames.find(
+    n => n.trim().toLowerCase() === "predata"
+  );
+
   if (!dataName) {
     cachedData = [];
     return showError('ไม่พบชีตชื่อ "PreData"');
@@ -696,6 +699,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
