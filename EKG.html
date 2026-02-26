@@ -486,7 +486,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
     // ====== ADD SPECIMEN (ตัวอย่างเดิม: เพิ่มลง Specimen sheet) ======
     // หมายเหตุ: คุณยังสามารถปรับให้เลือก EDTA/Naf/Clot ได้ตามหน้าอื่น
-    async function addSpecimen(e) {
+     async function addSpecimen(e) {
       if (e) e.preventDefault();
 
       try {
@@ -494,7 +494,6 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
         const id = (document.getElementById("showid")?.textContent || "").trim();
         const name = (document.getElementById("showname")?.textContent || "").trim();
-
         if (!id || !name) return showWarning("ต้องค้นหา ID ให้พบก่อน");
 
         const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
@@ -509,12 +508,11 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         while (last >= 0 && (aoa[last] || []).every(v => String(v).trim() === "")) last--;
         const nextRow = last + 1;
 
-        // ตัวอย่าง: ใส่ค่า specimen เป็น EDTA (คุณเปลี่ยนได้)
         const row = aoa[nextRow] ? [...aoa[nextRow]] : [];
-        row[0] = id;
-        row[1] = name;
-        row[2] = "ตรวจคลื่นไฟฟ้าหัวใจ";
-        row[3] = "EKG"; // ✅ ช่องที่ 4 (index 3)
+        row[0] = id;         // A
+        row[1] = name;       // B
+        row[2] = "ตรวจคลื่นไฟฟ้าหัวใจ"; // ✅ C
+        row[3] = "EKG";    // ✅ D (ตรงกับหัวข้อสรุป)
         aoa[nextRow] = row;
 
         workbook.Sheets[specName] = XLSX.utils.aoa_to_sheet(aoa);
@@ -541,7 +539,6 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         showError(err.message || "บันทึกไม่สำเร็จ");
       }
     }
-
     // ====== DELETE ROW (ลบจริงใน Specimen sheet) ======
     async function deleteSpecimenRow(sheetRowIndex) {
       try {
@@ -702,6 +699,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
