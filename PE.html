@@ -654,7 +654,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
             <input class="barcode" id="searchid" type="text" placeholder="สแกน/กรอกบาร์โค้ด..." />
             <button type="button" class="btn primary" onclick="submitSearch(event)" id="btnSearch">ค้นหา</button>
             <button type="button" class="btn primary" onclick="pickExcelOnce()" id="btnBack">+</button>
-            <button type="button" class="btn btn-outline-secondary">
+            <button type="button" onclick="showSpecimen()" class="btn btn-outline-secondary">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-medical-fill" viewBox="0 0 16 16">
   <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-3 2v.634l.549-.317a.5.5 0 1 1 .5.866L7 7l.549.317a.5.5 0 1 1-.5.866L6.5 7.866V8.5a.5.5 0 0 1-1 0v-.634l-.549.317a.5.5 0 1 1-.5-.866L5 7l-.549-.317a.5.5 0 0 1 .5-.866l.549.317V5.5a.5.5 0 1 1 1 0m-2 4.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1m0 2h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1 0-1"></path>
 </svg>
@@ -820,6 +820,46 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
           </form>
         </div>
       </div>
+            <div class="modal" id="showmodal" style="display: none;">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="table-header-row">
+              <h6 class="mb-0"></h6>
+              <div id="specCounts" class="spec-counts"></div>
+            </div>
+           
+        <button type="button" class="btn-close" onclick="closemodal()" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="table-wrapper">
+              <table id="specimenlist" class="table table-bordered" style="font-family: kanit;">
+                <colgroup>
+                  <col style="width: 5%;">
+                  <col style="width: 20%;">
+                  <col style="width: 55%;">
+                  <col style="width: 15%;">
+                  <col style="width: 5%;">
+                </colgroup>
+                <thead class="text-center" style="background-color:lightblue;">
+                  <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">ชื่อ นามสกุล</th>
+                    <th scope="col">specimen</th>
+                    <th scope="col">ลบ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- JS เติม -->
+                </tbody>
+              </table>
+            </div>
+      </div>
+    
+    </div>
+  </div>
+</div>
 
       <script>
         let fileHandle = null;
@@ -1167,6 +1207,156 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
   });
 
 }
+
+        async function deleteSpecimenRow(sheetRowIndex) {
+      try {
+        if (!fileHandle || !workbook) return showWarning("ยังไม่ได้เลือกไฟล์");
+
+        const confirm = await Swal.fire({
+          icon: "warning",
+          title: "ยืนยันการลบ?",
+          text: "รายการนี้จะถูกลบออกจากไฟล์ Excel ทันที",
+          showCancelButton: true,
+          confirmButtonText: "ลบ",
+          cancelButtonText: "ยกเลิก"
+        });
+
+        if (!confirm.isConfirmed) return;
+
+        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+        if (!specName) return showError('ไม่พบชีตชื่อ "Specimen"');
+
+        showLoading("กำลังลบข้อมูล...");
+
+        const ws = workbook.Sheets[specName];
+        const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+
+        aoa.splice(sheetRowIndex, 1);
+
+        workbook.Sheets[specName] = XLSX.utils.aoa_to_sheet(aoa);
+
+        const perm = await fileHandle.requestPermission({ mode: "readwrite" });
+        if (perm !== "granted") {
+          Swal.close();
+          return showError("ไม่ได้รับอนุญาตให้เขียนไฟล์");
+        }
+
+        const writable = await fileHandle.createWritable();
+        const out = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        await writable.write(out);
+        await writable.close();
+
+        Swal.close();
+        showSuccess("ลบสำเร็จ", "ลบรายการเรียบร้อยแล้ว");
+        showSpecimen();
+
+      } catch (err) {
+        Swal.close();
+        showError(err.message || "ลบไม่สำเร็จ");
+      }
+    }
+
+    // ====== ✅ สรุปจำนวนจาก "ตารางที่แสดง" (ช่องที่ 4) แล้วแสดงมุมขวาหัวตาราง ======
+    function renderCountsFromTable() {
+      const box = document.getElementById("specCounts");
+      if (!box) return;
+
+      const rows = document.querySelectorAll("#specimenlist tbody tr");
+      const counts = {};
+
+      rows.forEach(tr => {
+        // ช่องที่ 4 = td ลำดับที่ 3 (0:ID,1:Name,2:specimen?? => ในตารางของเรา: [No,ID,Name,specimen,delete])
+        // ดังนั้น specimen อยู่ cell index 3 ของทั้งแถว (th/td รวมกัน)
+        const cells = tr.querySelectorAll("th,td");
+        const sp = (cells[3]?.textContent || "").trim();
+        if (!sp) return;
+        counts[sp] = (counts[sp] || 0) + 1;
+      });
+
+      const keys = Object.keys(counts).sort((a, b) => a.localeCompare(b));
+      if (keys.length === 0) {
+        box.innerHTML = "";
+        return;
+      }
+
+      box.innerHTML = keys.map(k => {
+        const n = counts[k];
+        return `
+          <span class="spec-pill">
+            ${escapeHtml(k)}
+            <span class="badge bg-primary">${n}</span>
+          </span>
+        `;
+      }).join("");
+    }
+
+    // ====== SHOW SPECIMEN + ปุ่มลบ ======
+    function showSpecimen() {
+  if (!workbook) return;
+
+  const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+  if (!specName) return;
+
+  const ws = workbook.Sheets[specName];
+  const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+
+  const tbody = document.querySelector("#specimenlist tbody");
+  if (!tbody) return;
+
+  tbody.innerHTML = "";
+  let no = 1;
+
+  const targetC = "พบแพทย์";
+
+  // i=1 เพราะ i=0 คือหัวตารางใน Excel
+  for (let i = 1; i < aoa.length; i++) {
+    const r = aoa[i] || [];
+    const colA = String(r[0] ?? "").trim(); // ID
+    const colB = String(r[1] ?? "").trim(); // Name
+    const colC = String(r[2] ?? "").trim(); // ✅ C
+    const colD = String(r[3] ?? "").trim(); // specimen/code
+
+    if (!colA && !colB && !colC && !colD) continue;
+    if (colC !== targetC) continue; // ✅ แสดงเฉพาะ C ตรงนี้
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <th class="text-center">${no}</th>
+      <td class="text-center">${escapeHtml(colA)}</td>
+      <td>${escapeHtml(colB)}</td>
+      <td class="text-center">${escapeHtml(colD)}</td>
+      <td class="text-center">
+        <button type="button" id="deletebtn" class="btn btn-sm btn-danger" data-row="${i}">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+    no++;
+  }
+
+  // bind ปุ่มลบ
+  tbody.querySelectorAll('button[data-row]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.getAttribute('data-row'), 10);
+      deleteSpecimenRow(idx);
+    });
+  });
+
+  // ถ้าคุณยังใช้ตัวนับบนหัวตาราง (นับจากตารางที่แสดง)
+  if (typeof renderCountsFromTable === "function") {
+    renderCountsFromTable();
+  }
+  openmodal();
+}
+
+ function openmodal() {
+      document.getElementById("showmodal").style.display = "block";
+    }
+
+    function closemodal() {
+      document.getElementById("showmodal").style.display = "none";
+    }
       </script>
 
       <!-- JavaScript Libraries -->
@@ -1188,6 +1378,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
