@@ -800,7 +800,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
               </div>
 
               <div class="actions">
-                <button type="reset" class="btn ghost">ล้างข้อมูล</button>
+                <button type="btn" onclick="clearForEdit()" class="btn ghost">ล้างข้อมูล</button>
                 <button type="btn" onclick="saveHealthHistory(event)" id="pesubmit" class="btn primary">บันทึก</button>
               </div>
             </div>
@@ -1076,11 +1076,83 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
     Swal.close();
     showSuccess("บันทึกสำเร็จ", "กรุณารอพบแพทย์เป็นลำดับต่อไป");
-
+     resetAllHealthForm();
   } catch (err) {
     Swal.close();
     showError(err.message || "บันทึกไม่สำเร็จ");
   }
+}
+
+        function resetAllHealthForm() {
+
+  const form = document.getElementById("healthForm");
+  if (!form) return;
+
+  // ล้าง input / textarea ทั้งหมด
+  form.querySelectorAll("input, textarea").forEach(el => {
+    if (el.type === "radio" || el.type === "checkbox") {
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
+  });
+
+  // ล้างค่า span แสดงผลทั้งหมด
+  const displayIds = [
+    "Rn", "fullname", "age", "sex", "blood",
+    "height", "weight", "waist",
+    "bmi_display", "bp_display", "pulse",
+    "q1_display", "q2_display", "q3_display",
+    "q4_display", "q5_display", "q6_display"
+  ];
+
+  displayIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = "";
+  });
+
+  // โฟกัสกลับไปช่องค้นหา (ถ้ามี)
+  const searchInput = document.getElementById("searchid");
+  if (searchInput) {
+    searchInput.value = "";
+    searchInput.focus();
+  }
+}
+
+        function clearForEdit() {
+
+  const form = document.getElementById("healthForm");
+  if (!form) return;
+
+  // ล้าง input ทั้งหมด ยกเว้น RN กับ fullname
+  form.querySelectorAll("input, textarea").forEach(el => {
+
+    const id = el.id;
+
+    // ข้าม RN และ fullname
+    if (id === "Rn" || id === "fullname") return;
+
+    if (el.type === "radio" || el.type === "checkbox") {
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
+  });
+
+  // ล้าง span แสดงผล ยกเว้น RN และ fullname
+  const displayIds = [
+    "age", "sex", "blood",
+    "height", "weight", "waist",
+    "bmi_display", "bp_display", "pulse",
+    "q1_display", "q2_display", "q3_display",
+    "q4_display", "q5_display", "q6_display"
+  ];
+
+  displayIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = "";
+  });
+
 }
       </script>
 
@@ -1103,6 +1175,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
