@@ -801,7 +801,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
               <div class="actions">
                 <button type="reset" class="btn ghost">ล้างข้อมูล</button>
-                <button type="submit" class="btn primary">บันทึกแบบสอบถาม</button>
+                <button type="btn" onclick="saveHealthHistory()" id="pesubmit" class="btn primary">บันทึก</button>
               </div>
             </div>
           </form>
@@ -942,108 +942,85 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         }
 
         // ====== ADD SPECIMEN ======
-        async function addSpecimen(e) {
-          if (e) e.preventDefault();
+       async function saveHealthHistory() {
+  try {
+    if (!fileHandle || !workbook)
+      return showWarning("ยังไม่ได้เลือกไฟล์ Excel");
 
-          try {
-            if (!fileHandle || !workbook)
-              return showWarning("ยังไม่ได้เลือกไฟล์");
+    const sheetName = workbook.SheetNames.find(
+      n => n.trim().toLowerCase() === "healthhistory"
+    );
 
-            const id = document.getElementById("Rn")?.textContent.trim();
-            const name = document.getElementById("fullname")?.textContent.trim();
+    if (!sheetName)
+      return showError('ไม่พบชีตชื่อ "HealthHistory"');
 
-            if (!id || !name)
-              return showWarning("ต้องค้นหา ID ให้พบก่อน");
+    showLoading("กำลังบันทึกข้อมูล...");
 
-            const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
-            if (!specName)
-              return showError('ไม่พบชีตชื่อ "Specimen"');
+    const ws = workbook.Sheets[sheetName];
+    const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
 
-            showLoading("กำลังบันทึกข้อมูล...");
+    // ===== ดึงค่าจาก element =====
+    const Rn = document.getElementById("Rn")?.textContent.trim() || "";
+    const fullname = document.getElementById("fullname")?.textContent.trim() || "";
 
-            const ws = workbook.Sheets[specName];
-            const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+    const age = document.getElementById("age")?.value.trim() || "";
+    const sex = document.getElementById("sex")?.value.trim() || "";
+    const blood = document.getElementById("blood")?.value.trim() || "";
+    const weight = document.getElementById("weight")?.value.trim() || "";
+    const height = document.getElementById("height")?.value.trim() || "";
+    const waist = document.getElementById("waist")?.value.trim() || "";
+    const bp_sys = document.getElementById("bp_sys")?.value.trim() || "";
+    const bp_dia = document.getElementById("bp_dia")?.value.trim() || "";
+    const pulse = document.getElementById("pulse")?.value.trim() || "";
 
-            let last = aoa.length - 1;
-            while (last >= 0 && (aoa[last] || []).every(v => String(v).trim() === "")) last--;
-            const nextRow = last + 1;
+    if (!Rn || !fullname)
+      return showWarning("ข้อมูล Rn หรือ fullname ว่าง");
 
-            const row = aoa[nextRow] ? [...aoa[nextRow]] : [];
-            row[0] = id;
-            row[1] = name;
-            row[2] = "X Ray";
-            aoa[nextRow] = row;
+    // ===== หาแถวว่างถัดไป =====
+    let last = aoa.length - 1;
+    while (last >= 0 && (aoa[last] || []).every(v => String(v).trim() === ""))
+      last--;
+    const nextRow = last + 1;
 
-            workbook.Sheets[specName] = XLSX.utils.aoa_to_sheet(aoa);
+    const row = [];
 
-            const perm = await fileHandle.requestPermission({ mode: "readwrite" });
-            if (perm !== "granted") {
-              Swal.close();
-              return showError("ไม่ได้รับอนุญาตให้เขียนไฟล์");
-            }
+    // ===== ใส่ค่าตาม Column =====
+    row[0] = Rn;        // A
+    row[1] = fullname;  // B
+    row[2] = age;       // C
+    row[3] = sex;       // D
+    row[4] = blood;     // E
+    row[5] = weight;    // F
+    row[6] = height;    // G
+    row[7] = waist;     // H
 
-            const writable = await fileHandle.createWritable();
-            const out = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-            await writable.write(out);
-            await writable.close();
+    row[16] = bp_sys;   // Q
+    row[17] = bp_dia;   // R
+    row[18] = pulse;    // S
 
-            Swal.close();
-            showSuccess("บันทึกสำเร็จ", "ข้อมูลถูกเพิ่มใน Specimen แล้ว");
+    aoa[nextRow] = row;
 
-            showSpecimen();
-            closemodal();
+    workbook.Sheets[sheetName] = XLSX.utils.aoa_to_sheet(aoa);
 
-          } catch (err) {
-            Swal.close();
-            showError(err.message || "บันทึกไม่สำเร็จ");
-          }
-        }
+    const perm = await fileHandle.requestPermission({ mode: "readwrite" });
+    if (perm !== "granted") {
+      Swal.close();
+      return showError("ไม่ได้รับอนุญาตให้เขียนไฟล์");
+    }
 
-        // ====== SHOW SPECIMEN ======
-        function showSpecimen() {
-          if (!workbook) return;
+    const writable = await fileHandle.createWritable();
+    const out = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    await writable.write(out);
+    await writable.close();
 
-          const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
-          if (!specName) return;
+    Swal.close();
+    showSuccess("บันทึกสำเร็จ", "ข้อมูลถูกเพิ่มใน HealthHistory แล้ว");
 
-          const ws = workbook.Sheets[specName];
-          const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
-          const tbody = document.querySelector("#specimenlist tbody");
-          if (!tbody) return;
-
-          tbody.innerHTML = "";
-          let no = 1;
-
-          for (let i = 1; i < aoa.length; i++) {
-            const r = aoa[i] || [];
-            const colA = String(r[0] ?? "").trim();
-            const colB = String(r[1] ?? "").trim();
-            const colC = String(r[2] ?? "").trim();
-
-            if (!colA && !colB && !colC) continue;
-            if (colC.toLowerCase() !== "x ray") continue;
-
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-              <th class="text-center">${no}</th>
-              <td class="text-center">${escapeHtml(colA)}</td>
-              <td>${escapeHtml(colB)}</td>
-              <td class="text-center">${escapeHtml(colC)}</td>
-            `;
-            tbody.appendChild(tr);
-            no++;
-          }
-        }
-
-        function openmodal() {
-          const el = document.getElementById("showmodal");
-          if (el) el.style.display = "block";
-        }
-
-        function closemodal() {
-          const el = document.getElementById("showmodal");
-          if (el) el.style.display = "none";
-        }
+  } catch (err) {
+    Swal.close();
+    showError(err.message || "บันทึกไม่สำเร็จ");
+  }
+}
       </script>
 
       <!-- JavaScript Libraries -->
@@ -1065,6 +1042,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
