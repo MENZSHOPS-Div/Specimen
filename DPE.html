@@ -710,6 +710,37 @@
   grid-template-columns: 1fr 1fr;
   gap: 18px 40px;
 }
+
+.doctor-section {
+  margin-top: 30px;
+  padding: 24px;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.doctor-section h3 {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.result-box {
+  padding: 14px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  min-height: 45px;
+  font-weight: 600;
+  background: #fff;
+  margin-bottom: 22px;
+}
+
+.comment-box {
+  margin-bottom: 20px;
+}
+
+.save-area {
+  text-align: right;
+}
   </style>
 </head>
 
@@ -936,6 +967,27 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 </div>
 
   </div>
+  <!-- ผลการตรวจและความเห็นแพทย์ -->
+<div class="doctor-section">
+
+  <h3>ผลการตรวจและความเห็นแพทย์</h3>
+
+  <div class="result-box">
+    <span id="allresults"></span>
+  </div>
+
+  <div class="comment-box">
+    <label>ความเห็นแพทย์เพิ่มเติม</label>
+    <input type="text" id="drcomment" class="form-control">
+  </div>
+
+  <div class="save-area">
+    <button type="button" onclick="saveDoctorResult()" class="btn btn-primary">
+      บันทึก
+    </button>
+  </div>
+
+</div>
 </form>
         </div>
       </div>
@@ -1058,67 +1110,280 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 }
 
         // ====== SEARCH ======
-       function submitSearch(e) {
+     async function submitSearch(e) {
+
   if (e) e.preventDefault();
 
-  if (!fileHandle || !workbook)
-    return showWarning("กรุณาเลือกไฟล์ก่อน");
+  try {
 
-  const searchid = normalizeId(document.getElementById("searchid")?.value);
-  if (!searchid)
-    return showWarning("กรุณากรอก ID");
+    if (!fileHandle || !workbook)
+      return showWarning("กรุณาเลือกไฟล์ข้อมูลก่อน");
 
-  const sheetName = workbook.SheetNames.find(
-    n => n.trim().toLowerCase() === "healthhistory"
-  );
+    const searchid = normalizeId(
+      document.getElementById("searchid")?.value
+    );
 
-  if (!sheetName)
-    return showError('ไม่พบชีตชื่อ "HealthHistory"');
+    if (!searchid)
+      return showWarning("กรุณากรอกเลขประจำตัวผู้รับบริการ (RN)");
 
-  const ws = workbook.Sheets[sheetName];
-  const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+    const sheetName = workbook.SheetNames.find(
+      n => n.trim().toLowerCase() === "healthhistory"
+    );
 
-  // ค้นหา Column A (index 0)
-  const row = aoa.find(r => normalizeId(r?.[0]) === searchid);
+    if (!sheetName)
+      return showError('ไม่พบชีตชื่อ "HealthHistory"');
 
-  if (!row)
-    return showError("ID นี้ยังไม่ได้ซักประวัติ");
+    const ws = workbook.Sheets[sheetName];
+    const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
 
-  // ===== Map ค่าไปยัง element =====
+    const row = aoa.find(r =>
+      normalizeId(r?.[0]) === searchid
+    );
 
-  document.getElementById("Rn").textContent = row[0] || "";
-  document.getElementById("fullname").textContent = row[1] || "";
-  document.getElementById("age").textContent = row[2] || "";
-  document.getElementById("sex").textContent = row[3] || "";
-  document.getElementById("blood").textContent = row[4] || "";
+    if (!row)
+      return showError("คุณยังไม่ได้วัดความดันโลหิต");
 
-  document.getElementById("height").textContent = row[6] || "";
-  document.getElementById("weight").textContent = row[5] || "";
-  document.getElementById("waist").textContent = row[7] || "";
+    // =========================
+    // ===== Map ข้อมูล =====
+    // =========================
 
-  // BMI = I + " (" + J + ")"
-  const bmiValue = row[8] || "";
-  const bmiSummary = row[9] || "";
-  document.getElementById("bmi_display").textContent =
-    bmiValue ? `${bmiValue} (${bmiSummary})` : "";
+    document.getElementById("Rn").textContent = row[0] || "";
+    document.getElementById("fullname").textContent = row[1] || "";
+    document.getElementById("age").textContent = row[2] || "";
+    document.getElementById("sex").textContent = row[3] || "";
+    document.getElementById("blood").textContent = row[4] || "";
 
-  // BP = Q / R
-  const sys = row[16] || "";
-  const dia = row[17] || "";
-  document.getElementById("bp_display").textContent =
-    sys && dia ? `${sys} / ${dia}` : "";
+    document.getElementById("weight").textContent = row[5] || "";
+    document.getElementById("height").textContent = row[6] || "";
+    document.getElementById("waist").textContent = row[7] || "";
 
-  document.getElementById("pulse").textContent = row[18] || "";
+    document.getElementById("bmi_display").textContent =
+      row[8] ? `${row[8]} (${row[9]})` : "";
 
-  // Q1-Q6
-  document.getElementById("q1_display").textContent = row[10] || "";
-  document.getElementById("q2_display").textContent = row[11] || "";
-  document.getElementById("q3_display").textContent = row[12] || "";
-  document.getElementById("q4_display").textContent = row[13] || "";
-  document.getElementById("q5_display").textContent = row[14] || "";
-  document.getElementById("q6_display").textContent = row[15] || "";
+    const sys = parseInt(row[16] || 0);
+    const dia = parseInt(row[17] || 0);
+    const pulse = parseInt(row[18] || 0);
 
-  showSuccess("พบข้อมูลแล้ว", "นี่คือข้อมูลจากการซักประวัติ");
+    document.getElementById("bp_display").textContent =
+      sys && dia ? `${sys} / ${dia}` : "";
+
+    document.getElementById("pulse").textContent = row[18] || "";
+
+    document.getElementById("q1_display").textContent = row[10] || "";
+    document.getElementById("q2_display").textContent = row[11] || "";
+    document.getElementById("q3_display").textContent = row[12] || "";
+    document.getElementById("q4_display").textContent = row[13] || "";
+    document.getElementById("q5_display").textContent = row[14] || "";
+    document.getElementById("q6_display").textContent = row[15] || "";
+
+    // =========================
+    // ===== วิเคราะห์ทางการแพทย์ =====
+    // =========================
+
+    // 1️⃣ ดัชนีมวลกาย
+    const bmiValue = parseFloat(row[8] || 0);
+    let bmiAssessment = "";
+
+    if (bmiValue < 18.5)
+      bmiAssessment = "อยู่ในเกณฑ์น้ำหนักต่ำกว่ามาตรฐาน";
+    else if (bmiValue < 23)
+      bmiAssessment = "อยู่ในเกณฑ์ปกติ";
+    else if (bmiValue < 25)
+      bmiAssessment = "มีภาวะน้ำหนักเกิน";
+    else if (bmiValue < 30)
+      bmiAssessment = "มีภาวะอ้วนระดับที่ 1";
+    else
+      bmiAssessment = "มีภาวะอ้วนระดับที่ 2";
+
+    // 2️⃣ ความดันโลหิต (ใช้ค่า Systolic)
+    let bpAssessment = "";
+
+    if (sys >= 180)
+      bpAssessment = "อยู่ในระดับความดันโลหิตสูงรุนแรง (Severe Hypertension)";
+    else if (sys >= 160)
+      bpAssessment = "อยู่ในระดับความดันโลหิตสูงปานกลาง";
+    else if (sys >= 140)
+      bpAssessment = "อยู่ในระดับความดันโลหิตสูงเล็กน้อย";
+    else if (sys >= 100 && sys <= 120)
+      bpAssessment = "อยู่ในเกณฑ์ปกติ";
+    else if (sys < 100)
+      bpAssessment = "มีภาวะความดันโลหิตต่ำ";
+
+    // 3️⃣ อัตราการเต้นของหัวใจ
+    let pulseAssessment = "";
+
+    if (pulse > 100)
+      pulseAssessment = "มีภาวะหัวใจเต้นเร็ว (Tachycardia)";
+    else if (pulse < 60)
+      pulseAssessment = "มีภาวะหัวใจเต้นช้า (Bradycardia)";
+    else
+      pulseAssessment = "อัตราการเต้นของหัวใจอยู่ในเกณฑ์ปกติ";
+
+    // =========================
+    // ===== สรุปผลทางการแพทย์ =====
+    // =========================
+
+    const finalResult =
+      `ดัชนีมวลกาย ${bmiAssessment} ` +
+      `ความดันโลหิต ${bpAssessment} ` +
+      `และ ${pulseAssessment}`;
+
+    document.getElementById("allresults").textContent = finalResult;
+
+    showSuccess("เรียกดูข้อมูลสำเร็จ");
+
+  } catch (err) {
+    showError(err.message || "เกิดข้อผิดพลาดในการค้นหาข้อมูล");
+  }
+}
+
+async function saveDoctorResult() {
+
+  try {
+
+    if (!fileHandle || !workbook)
+      return showWarning("ยังไม่ได้เลือกไฟล์ Excel");
+
+    const rn = document.getElementById("Rn")?.textContent.trim();
+    const fullname = document.getElementById("fullname")?.textContent.trim();
+    const allresults = document.getElementById("allresults")?.textContent.trim();
+    const drcomment = document.getElementById("drcomment")?.value.trim();
+
+    if (!rn) return showWarning("ไม่พบ RN");
+    if (!allresults) return showWarning("ยังไม่มีผลการประเมิน");
+
+    showLoading("กำลังบันทึกข้อมูล...");
+
+    // =========================
+    // 1️⃣ บันทึกลง HealthHistory
+    // =========================
+
+    const healthSheetName = workbook.SheetNames.find(
+      n => n.trim().toLowerCase() === "healthhistory"
+    );
+
+    if (!healthSheetName)
+      return showError('ไม่พบชีตชื่อ "HealthHistory"');
+
+    let healthWS = workbook.Sheets[healthSheetName];
+    let healthAOA = XLSX.utils.sheet_to_json(healthWS, { header: 1, defval: "" });
+
+    const rowIndex = healthAOA.findIndex(
+      r => normalizeId(r?.[0]) === normalizeId(rn)
+    );
+
+    if (rowIndex === -1)
+      return showError("ไม่พบ RN ใน HealthHistory");
+
+    const finalText = drcomment
+      ? `${allresults} | ความเห็นเพิ่มเติม: ${drcomment}`
+      : allresults;
+
+    healthAOA[rowIndex][19] = finalText; // Column T (index 19)
+
+    workbook.Sheets[healthSheetName] =
+      XLSX.utils.aoa_to_sheet(healthAOA);
+
+    // =========================
+    // 2️⃣ บันทึกลง specimen
+    // =========================
+
+    let specimenSheetName = workbook.SheetNames.find(
+      n => n.trim().toLowerCase() === "specimen"
+    );
+
+    // ถ้าไม่มี sheet specimen → สร้างใหม่
+    if (!specimenSheetName) {
+      specimenSheetName = "specimen";
+      workbook.SheetNames.push(specimenSheetName);
+      workbook.Sheets[specimenSheetName] =
+        XLSX.utils.aoa_to_sheet([]);
+    }
+
+    let specimenWS = workbook.Sheets[specimenSheetName];
+    let specimenAOA = XLSX.utils.sheet_to_json(specimenWS, { header: 1, defval: "" });
+
+    // หาแถวว่างถัดไป
+    let last = specimenAOA.length - 1;
+    while (last >= 0 && (specimenAOA[last] || []).every(v => String(v).trim() === ""))
+      last--;
+
+    const nextRow = last + 1;
+
+    const newRow = [];
+    newRow[0] = rn;          // Column A
+    newRow[1] = fullname;    // Column B
+    newRow[2] = "พบแพทย์";   // Column C
+    newRow[3] = "PE";        // Column D
+
+    specimenAOA[nextRow] = newRow;
+
+    workbook.Sheets[specimenSheetName] =
+      XLSX.utils.aoa_to_sheet(specimenAOA);
+
+    // =========================
+    // 3️⃣ เขียนไฟล์กลับ
+    // =========================
+
+    const perm = await fileHandle.requestPermission({ mode: "readwrite" });
+    if (perm !== "granted") {
+      Swal.close();
+      return showError("ไม่ได้รับอนุญาตให้เขียนไฟล์");
+    }
+
+    const writable = await fileHandle.createWritable();
+    const out = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    await writable.write(out);
+    await writable.close();
+
+    Swal.close();
+    showSuccess("อัพเดทข้อมูลสำเร็จ");
+    resetForNextPatient();
+  } catch (err) {
+    Swal.close();
+    showError(err.message || "บันทึกไม่สำเร็จ");
+  }
+}
+
+function resetForNextPatient() {
+
+  // ล้างค่าใน form ทั้งหมด
+  const form = document.getElementById("healthForm");
+  if (form) {
+    form.querySelectorAll("input, textarea").forEach(el => {
+      if (el.type === "radio" || el.type === "checkbox") {
+        el.checked = false;
+      } else {
+        el.value = "";
+      }
+    });
+  }
+
+  // ล้างค่า span แสดงผล
+  const displayIds = [
+    "Rn", "fullname", "age", "sex", "blood",
+    "height", "weight", "waist",
+    "bmi_display", "bp_display", "pulse",
+    "q1_display", "q2_display", "q3_display",
+    "q4_display", "q5_display", "q6_display",
+    "allresults"
+  ];
+
+  displayIds.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = "";
+  });
+
+  // เคลียร์ comment
+  const comment = document.getElementById("drcomment");
+  if (comment) comment.value = "";
+
+  // โฟกัสกลับช่องค้นหา
+  const searchInput = document.getElementById("searchid");
+  if (searchInput) {
+    searchInput.value = "";
+    searchInput.focus();
+  }
 }
     // ===== Helper อ่านค่าคำถาม =====
   
