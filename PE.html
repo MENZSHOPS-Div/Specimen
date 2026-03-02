@@ -724,7 +724,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
                     <div class="pulse">
                       <label for="pulse" style="margin:0 0 6px;">ชีพจร (ครั้ง/นาที)</label>
-                      <input id="pulse" name="pulse" type="number" min="0" step="1" placeholder="เช่น 72"
+                      <input id="pulse" name="pulse" type="number" min="0" step="1"
                         inputmode="numeric" />
                     </div>
                   </div>
@@ -960,7 +960,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
       const selected = document.querySelector(`input[name="${qName}"]:checked`);
       if (!selected) return null;
 
-      if (selected.value === "no") return "ไม่ใช่";
+      if (selected.value === "no") return "ไม่มี";
 
       const detail = document
         .querySelector(`input[name="${qName}_detail"]`)
@@ -1103,6 +1103,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
