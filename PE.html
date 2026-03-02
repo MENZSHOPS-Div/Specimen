@@ -942,8 +942,8 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         }
 
         // ====== ADD SPECIMEN ======
-     async function saveHealthHistory(e) {
-  if (e) e.preventDefault(); // 🔥 กัน form reload
+   async function saveHealthHistory(e) {
+  if (e) e.preventDefault(); // กัน form reload
 
   try {
     if (!fileHandle || !workbook)
@@ -952,7 +952,6 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     const sheetName = workbook.SheetNames.find(
       n => n.trim().toLowerCase() === "healthhistory"
     );
-
     if (!sheetName)
       return showError('ไม่พบชีตชื่อ "HealthHistory"');
 
@@ -968,11 +967,10 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         ?.value.trim();
 
       if (!detail) return "__MISSING_DETAIL__";
-
       return detail;
     }
 
-    // ===== อ่านค่าคำถาม =====
+    // ===== อ่านค่าคำถาม Q1–Q6 =====
     const q1 = getQuestionValue("q1");
     const q2 = getQuestionValue("q2");
     const q3 = getQuestionValue("q3");
@@ -981,10 +979,8 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     const q6 = getQuestionValue("q6");
 
     const questions = [q1, q2, q3, q4, q5, q6];
-
     if (questions.includes(null))
       return showWarning("กรุณาตอบคำถามให้ครบทุกข้อ");
-
     if (questions.includes("__MISSING_DETAIL__"))
       return showWarning("กรุณากรอกรายละเอียดในข้อที่เลือก 'ใช่'");
 
@@ -1010,6 +1006,27 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     if (!Rn || !fullname)
       return showWarning("ข้อมูล Rn หรือ fullname ว่าง");
 
+    // ===== คำนวณ BMI =====
+    let bmiValue = "";
+    let bmiSummary = "";
+
+    const w = parseFloat(weight);
+    const h = parseFloat(height);
+
+    if (!isNaN(w) && !isNaN(h) && h > 0) {
+      const hMeter = h / 100;
+      const bmi = w / (hMeter * hMeter);
+      bmiValue = bmi.toFixed(2);
+
+      if (bmi < 18.5) bmiSummary = "น้ำหนักน้อย";
+      else if (bmi < 23) bmiSummary = "ปกติ";
+      else if (bmi < 25) bmiSummary = "น้ำหนักเกิน";
+      else if (bmi < 30) bmiSummary = "อ้วนระดับ 1";
+      else bmiSummary = "อ้วนระดับ 2";
+    } else {
+      return showWarning("กรุณากรอกน้ำหนักและส่วนสูงให้ถูกต้อง");
+    }
+
     // ===== หาแถวว่างถัดไป =====
     let last = aoa.length - 1;
     while (last >= 0 && (aoa[last] || []).every(v => String(v).trim() === ""))
@@ -1028,7 +1045,9 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     row[6] = height;    // G
     row[7] = waist;     // H
 
-    // ===== Q1–Q6 ลง K–P =====
+    row[8] = bmiValue;    // I (BMI ตัวเลข)
+    row[9] = bmiSummary;  // J (สรุป BMI)
+
     row[10] = q1; // K
     row[11] = q2; // L
     row[12] = q3; // M
@@ -1084,6 +1103,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
+
 
 
 
