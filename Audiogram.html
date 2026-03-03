@@ -141,16 +141,148 @@
     font-size: 12px;
   }
 
-  .spec-pill .badge{
-  font-size: 14px;           /* เดิมเล็กไป -> เพิ่ม */
-  padding: 6px 10px;         /* ให้ดูเป็นเม็ดยา */
-  border-radius: 999px;
-  background: #eaf7ff !important;  /* โทนสีอ่อน */
-  color: #0f2b38 !important;       /* โทนสีเข้ม */
-  border: 1px solid rgba(15,43,56,.15);
-  font-weight: 700;
-  line-height: 1;
-}
+  .spec-pill .badge {
+    font-size: 14px;
+    /* เดิมเล็กไป -> เพิ่ม */
+    padding: 6px 10px;
+    /* ให้ดูเป็นเม็ดยา */
+    border-radius: 999px;
+    background: #eaf7ff !important;
+    /* โทนสีอ่อน */
+    color: #0f2b38 !important;
+    /* โทนสีเข้ม */
+    border: 1px solid rgba(15, 43, 56, .15);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  body {
+    font-family: 'Kanit', sans-serif;
+    background: #f5f5f5;
+  }
+
+  .audiogram-container {
+    width: 90%;
+    margin: 40px auto;
+    padding: 40px;
+    background: #e6e6e6;
+    border-radius: 30px;
+    border: 2px solid #555;
+  }
+
+  .ear-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .ear-label {
+    width: 120px;
+    text-align: right;
+    margin-right: 20px;
+  }
+
+  .ear-title {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .ear-sub {
+    font-size: 14px;
+    color: red;
+    margin-top: 5px;
+  }
+
+  .freq-table {
+    border-collapse: collapse;
+  }
+
+  .freq-table th,
+  .freq-table td {
+    border: 1px solid #333;
+    text-align: center;
+    padding: 10px;
+    min-width: 85px;
+  }
+
+  .freq-table th {
+    background: #dcdcdc;
+    font-weight: 500;
+  }
+
+  .input-row input {
+    width: 70px;
+    padding: 5px;
+    text-align: center;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: red;
+    font-weight: 500;
+  }
+
+  .modal-body {
+    overflow-x: auto;
+  }
+
+  .audiogram-wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  .audiogram-container {
+    padding: 30px;
+    background: #e6e6e6;
+    border-radius: 25px;
+    border: 2px solid #555;
+    max-width: 100%;
+  }
+
+  .ear-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .ear-label {
+    width: 110px;
+    text-align: right;
+    margin-right: 20px;
+  }
+
+  .ear-title {
+    font-weight: 500;
+  }
+
+  .ear-sub {
+    font-size: 13px;
+    color: red;
+  }
+
+  .freq-table {
+    border-collapse: collapse;
+  }
+
+  .freq-table th,
+  .freq-table td {
+    border: 1px solid #333;
+    padding: 8px;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .freq-table th {
+    background: #dcdcdc;
+  }
+
+  .freq-table input {
+    width: 60px;
+    border: none;
+    background: transparent;
+    text-align: center;
+    color: red;
+    font-weight: 500;
+  }
 </style>
 
 <body>
@@ -178,38 +310,41 @@
           </div>
           <div class="ms-3">
             <h6 class="mb-0">Specimen Check</h6>
-          
+
           </div>
         </div>
 
         <div class="navbar-nav w-100">
-          <a href="PE.html" class="nav-item nav-link mt-5"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-clipboard2-pulse-fill" viewBox="0 0 16 16">
+          <a href="PE.html" class="nav-item nav-link mt-5"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+              height="16" fill="currentColor" class="bi bi-clipboard2-pulse-fill" viewBox="0 0 16 16">
               <path
                 d="M10 .5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5.5.5 0 0 1-.5.5.5.5 0 0 0-.5.5V2a.5.5 0 0 0 .5.5h5A.5.5 0 0 0 11 2v-.5a.5.5 0 0 0-.5-.5.5.5 0 0 1-.5-.5" />
               <path
                 d="M4.085 1H3.5A1.5 1.5 0 0 0 2 2.5v12A1.5 1.5 0 0 0 3.5 16h9a1.5 1.5 0 0 0 1.5-1.5v-12A1.5 1.5 0 0 0 12.5 1h-.585q.084.236.085.5V2a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 4 2v-.5q.001-.264.085-.5M9.98 5.356 11.372 10h.128a.5.5 0 0 1 0 1H11a.5.5 0 0 1-.479-.356l-.94-3.135-1.092 5.096a.5.5 0 0 1-.968.039L6.383 8.85l-.936 1.873A.5.5 0 0 1 5 11h-.5a.5.5 0 0 1 0-1h.191l1.362-2.724a.5.5 0 0 1 .926.08l.94 3.135 1.092-5.096a.5.5 0 0 1 .968-.039Z" />
             </svg>ซักประวัติ</a>
-            <a href="DPE.html" class="nav-item nav-link mt-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
-  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-  <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-</svg>
+          <a href="DPE.html" class="nav-item nav-link mt-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-person-square" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+              <path
+                d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" />
+            </svg>
             พบแพทย์
           </a>
-          <a href="xray.html" class="nav-item nav-link mt-3"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lungs-fill"
-              viewBox="0 0 16 16">
+          <a href="xray.html" class="nav-item nav-link mt-3"> <svg xmlns="http://www.w3.org/2000/svg" width="16"
+              height="16" fill="currentColor" class="bi bi-lungs-fill" viewBox="0 0 16 16">
               <path
                 d="M8 1a.5.5 0 0 1 .5.5v5.243L9 7.1V4.72C9 3.77 9.77 3 10.72 3c.524 0 1.023.27 1.443.592.431.332.847.773 1.216 1.229.736.908 1.347 1.946 1.58 2.48.176.405.393 1.16.556 2.011.165.857.283 1.857.24 2.759-.04.867-.232 1.79-.837 2.33-.67.6-1.622.556-2.741-.004l-1.795-.897A2.5 2.5 0 0 1 9 11.264V8.329l-1-.715-1 .715V7.214c-.1 0-.202.03-.29.093l-2.5 1.786a.5.5 0 1 0 .58.814L7 8.329v2.935A2.5 2.5 0 0 1 5.618 13.5l-1.795.897c-1.12.56-2.07.603-2.741.004-.605-.540-.798-1.463-.838-2.33-.042-.902.076-1.902.24-2.759.164-.852.38-1.606.558-2.012.232-.533.843-1.571 1.579-2.479.37-.456.785-.897 1.216-1.229C4.257 3.27 4.756 3 5.28 3 6.23 3 7 3.77 7 4.72V7.1l.5-.357V1.5A.5.5 0 0 1 8 1m3.21 8.907a.5.5 0 1 0 .58-.814l-2.5-1.786A.5.5 0 0 0 9 7.214V8.33z" />
             </svg>X Ray</a>
-          <a href="EKG.html" class="nav-item nav-link  mt-3"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-activity"
-              viewBox="0 0 16 16">
+          <a href="EKG.html" class="nav-item nav-link  mt-3"> <svg xmlns="http://www.w3.org/2000/svg" width="16"
+              height="16" fill="currentColor" class="bi bi-activity" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
                 d="M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2" />
             </svg>EKG</a>
-          
-          <a href="Bloodtest.html" class="nav-item nav-link mt-3"><svg fill="#000000" height="20px" width="15px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-              xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 297 297" xml:space="preserve">
+
+          <a href="Bloodtest.html" class="nav-item nav-link mt-3"><svg fill="#000000" height="20px" width="15px"
+              version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+              viewBox="0 0 297 297" xml:space="preserve">
               <path d="M294.081,72.683L224.316,2.918c-3.891-3.889-10.2-3.891-14.095,0l-23.256,23.255c-1.869,1.869-2.919,4.404-2.919,7.047
 s1.05,5.178,2.919,7.047l4.581,4.581L12.552,223.843C4.458,231.936,0,242.698,0,254.144c0,11.447,4.458,22.208,12.552,30.303
 c8.094,8.094,18.857,12.552,30.303,12.552s22.208-4.458,30.302-12.552l178.995-178.995l4.581,4.581
@@ -218,15 +353,17 @@ M59.062,270.353c-4.329,4.33-10.085,6.714-16.207,6.714s-11.879-2.384-16.208-6.714
 c0-6.123,2.384-11.878,6.714-16.207l120.856-120.856l32.416,32.416L59.062,270.353z M194.013,135.402l-32.416-32.416l44.044-44.044
 l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671,55.671L263.779,88.892z" />
             </svg>เจาะเลือด</a>
-          <a href="UA.html" class="nav-item nav-link mt-3"> <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-beaker-fill"
-              viewBox="0 0 16 16">
+          <a href="UA.html" class="nav-item nav-link mt-3"> <svg xmlns="http://www.w3.org/2000/svg" width="16"
+              height="16" fill="currentColor" class="bi bi-beaker-fill" viewBox="0 0 16 16">
               <path
                 d="M15.575.006a.5.5 0 0 1 .327.79l-.048.058-.122.12A2.5 2.5 0 0 0 15 2.743V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V2.742a2.5 2.5 0 0 0-.566-1.584L.268.975.146.854A.5.5 0 0 1 .5 0h15zM11.5 13a.5.5 0 1 0 0 1H13v-1zm-2-2a.5.5 0 0 0 0 1H13v-1zm2-2a.5.5 0 1 0 0 1H13V9zm-2-2a.5.5 0 1 0 0 1H13V7zm2-2a.5.5 0 1 0 0 1H13V5zm-2-2a.5.5 0 1 0 0 1H13V3z" />
             </svg>ส่งปัสสาวะ</a>
-            <a href="Audiogram.html" class="nav-item nav-link active mt-3">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-headphones" viewBox="0 0 16 16">
-  <path d="M8 3a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a6 6 0 1 1 12 0v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V8a5 5 0 0 0-5-5"/>
-</svg>
+          <a href="Audiogram.html" class="nav-item nav-link active mt-3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-headphones"
+              viewBox="0 0 16 16">
+              <path
+                d="M8 3a5 5 0 0 0-5 5v1h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V8a6 6 0 1 1 12 0v5a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1V8a5 5 0 0 0-5-5" />
+            </svg>
             ตรวจการได้ยิน
           </a>
         </div>
@@ -275,7 +412,8 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         </div>
 
         <div class="container-fluid pt-4 px-4" style="flex:1; overflow:hidden;">
-          <div class="bg-light rounded h-100 p-4" style="height:100%; overflow:hidden; display:flex; flex-direction:column;">
+          <div class="bg-light rounded h-100 p-4"
+            style="height:100%; overflow:hidden; display:flex; flex-direction:column;">
 
             <!-- ✅ หัวตาราง: ซ้ายชื่อ / ขวาสรุปจำนวน -->
             <div class="table-header-row">
@@ -313,12 +451,16 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     </div>
 
     <!-- Modal -->
-    <div class="modal" id="showmodal" style="display: none;">
-      <div class="modal-dialog">
+    <div class="modal" id="showmodal" style="Display: none;">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
+
           <div class="modal-header">
-            <h5 class="modal-title">Audiogram</h5>
-            <button type="button" class="btn-close" aria-label="Close" onclick="closemodal()"></button>
+            <div class="row">
+              <h5 class="modal-title">Audiogram</h5>
+              <button type="button" onclick="openTest()" class="btn btn-link">โหมดลงผลหน้างาน</button>
+            </div>
+            <button type="button" class="btn-close" onclick="closemodal()" data-bs-dismiss="modal"></button>
           </div>
 
           <div class="modal-body">
@@ -330,11 +472,74 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
                 <span class="form-control" id="showname"></span>
               </div>
             </div>
-          </div>
+            <!-- wrapper กลาง -->
+            <div id="audiotest" class="audiogram-wrapper" style="display: none;">
+              <div class="audiogram-container">
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closemodal()">Close</button>
-            <button id="addspecimen" type="button" onclick="addSpecimen(event)" class="btn btn-primary">Input</button>
+                <!-- หูขวา -->
+                <div class="ear-row">
+                  <div class="ear-label">
+                    <div class="ear-title">หูขวา</div>
+
+                  </div>
+
+                  <table class="freq-table">
+                    <tr>
+                      <th>500Hz</th>
+                      <th>1000Hz</th>
+                      <th>2000Hz</th>
+                      <th>3000Hz</th>
+                      <th>4000Hz</th>
+                      <th>6000Hz</th>
+                      <th>8000Hz</th>
+                    </tr>
+                    <tr>
+                      <td><input id="r500"></td>
+                      <td><input id="r1000"></td>
+                      <td><input id="r2000"></td>
+                      <td><input id="r3000"></td>
+                      <td><input id="r4000"></td>
+                      <td><input id="r6000"></td>
+                      <td><input id="r8000"></td>
+                    </tr>
+                  </table>
+                </div>
+
+                <!-- หูซ้าย -->
+                <div class="ear-row">
+                  <div class="ear-label">
+                    <div class="ear-title">หูซ้าย</div>
+
+                  </div>
+
+                  <table class="freq-table">
+                    <tr>
+                      <th>500Hz</th>
+                      <th>1000Hz</th>
+                      <th>2000Hz</th>
+                      <th>3000Hz</th>
+                      <th>4000Hz</th>
+                      <th>6000Hz</th>
+                      <th>8000Hz</th>
+                    </tr>
+                    <tr>
+                      <td><input id="L500"></td>
+                      <td><input id="L1000"></td>
+                      <td><input id="L2000"></td>
+                      <td><input id="L3000"></td>
+                      <td><input id="L4000"></td>
+                      <td><input id="L6000"></td>
+                      <td><input id="L8000"></td>
+                    </tr>
+                  </table>
+                </div>
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="closemodal()">Close</button>
+              <button id="addspecimen" type="button" onclick="saveSpecimenAndAudiogram()" class="btn btn-primary">Input</button>
+            </div>
           </div>
         </div>
       </div>
@@ -494,61 +699,107 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
     // ====== ADD SPECIMEN (ตัวอย่างเดิม: เพิ่มลง Specimen sheet) ======
     // หมายเหตุ: คุณยังสามารถปรับให้เลือก EDTA/Naf/Clot ได้ตามหน้าอื่น
-    async function addSpecimen(e) {
-      if (e) e.preventDefault();
+   async function saveSpecimenAndAudiogram() {
 
-      try {
-        if (!fileHandle || !workbook) return showWarning("ยังไม่ได้เลือกไฟล์");
+  try {
 
-        const id = (document.getElementById("showid")?.textContent || "").trim();
-        const name = (document.getElementById("showname")?.textContent || "").trim();
+    if (!fileHandle || !workbook)
+      return showWarning("ยังไม่ได้เลือกไฟล์");
 
-        if (!id || !name) return showWarning("ต้องค้นหา ID ให้พบก่อน");
+    const id = (document.getElementById("showid")?.textContent || "").trim();
+    const name = (document.getElementById("showname")?.textContent || "").trim();
 
-        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
-        if (!specName) return showError('ไม่พบชีตชื่อ "Specimen"');
+    if (!id || !name)
+      return showWarning("ต้องค้นหา ID ให้พบก่อน");
 
-        showLoading("กำลังบันทึกข้อมูล...");
+    showLoading("กำลังบันทึกข้อมูล...");
 
-        const ws = workbook.Sheets[specName];
-        const aoa = XLSX.utils.sheet_to_json(ws, { header: 1, defval: "" });
+    // =========================
+    // 1️⃣ บันทึก Specimen
+    // =========================
+    const specimenSheetName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+    if (!specimenSheetName)
+      return showError('ไม่พบชีตชื่อ "Specimen"');
 
-        let last = aoa.length - 1;
-        while (last >= 0 && (aoa[last] || []).every(v => String(v).trim() === "")) last--;
-        const nextRow = last + 1;
+    let wsSpec = workbook.Sheets[specimenSheetName];
+    let aoaSpec = XLSX.utils.sheet_to_json(wsSpec, { header: 1, defval: "" });
 
-        // ตัวอย่าง: ใส่ค่า specimen เป็น EDTA (คุณเปลี่ยนได้)
-        const row = aoa[nextRow] ? [...aoa[nextRow]] : [];
-        row[0] = id;
-        row[1] = name;
-        row[2] = "ตรวจการได้ยิน";
-        row[3] = "Ear"; // ✅ ช่องที่ 4 (index 3)
-        aoa[nextRow] = row;
+    let lastSpec = aoaSpec.length - 1;
+    while (lastSpec >= 0 && (aoaSpec[lastSpec] || []).every(v => String(v).trim() === "")) lastSpec--;
+    const nextSpecRow = lastSpec + 1;
 
-        workbook.Sheets[specName] = XLSX.utils.aoa_to_sheet(aoa);
+    aoaSpec[nextSpecRow] = [
+      id,
+      name,
+      "ตรวจการได้ยิน",
+      "Ear"
+    ];
 
-        const perm = await fileHandle.requestPermission({ mode: "readwrite" });
-        if (perm !== "granted") {
-          Swal.close();
-          return showError("ไม่ได้รับอนุญาตให้เขียนไฟล์");
-        }
+    workbook.Sheets[specimenSheetName] = XLSX.utils.aoa_to_sheet(aoaSpec);
 
-        const writable = await fileHandle.createWritable();
-        const out = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        await writable.write(out);
-        await writable.close();
+    // =========================
+    // 2️⃣ บันทึก Audiogram
+    // =========================
+    const audioSheetName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "audiogram");
+    if (!audioSheetName)
+      return showError('ไม่พบชีตชื่อ "Audiogram"');
 
-        Swal.close();
-        showSuccess("บันทึกสำเร็จ", "ข้อมูลถูกเพิ่มใน Specimen แล้ว");
+    let wsAudio = workbook.Sheets[audioSheetName];
+    let aoaAudio = XLSX.utils.sheet_to_json(wsAudio, { header: 1, defval: "" });
 
-        showSpecimen();
-        closemodal();
+    let lastAudio = aoaAudio.length - 1;
+    while (lastAudio >= 0 && (aoaAudio[lastAudio] || []).every(v => String(v).trim() === "")) lastAudio--;
+    const nextAudioRow = lastAudio + 1;
 
-      } catch (err) {
-        Swal.close();
-        showError(err.message || "บันทึกไม่สำเร็จ");
-      }
+    const audioRow = [
+      id,
+      name,
+      document.getElementById("r500")?.value || "",
+      document.getElementById("r1000")?.value || "",
+      document.getElementById("r2000")?.value || "",
+      document.getElementById("r3000")?.value || "",
+      document.getElementById("r4000")?.value || "",
+      document.getElementById("r6000")?.value || "",
+      document.getElementById("r8000")?.value || "",
+      document.getElementById("L500")?.value || "",
+      document.getElementById("L1000")?.value || "",
+      document.getElementById("L2000")?.value || "",
+      document.getElementById("L3000")?.value || "",
+      document.getElementById("L4000")?.value || "",
+      document.getElementById("L6000")?.value || "",
+      document.getElementById("L8000")?.value || ""
+    ];
+
+    aoaAudio[nextAudioRow] = audioRow;
+
+    workbook.Sheets[audioSheetName] = XLSX.utils.aoa_to_sheet(aoaAudio);
+
+    // =========================
+    // 3️⃣ เขียนไฟล์ครั้งเดียว
+    // =========================
+    const perm = await fileHandle.requestPermission({ mode: "readwrite" });
+    if (perm !== "granted") {
+      Swal.close();
+      return showError("ไม่ได้รับอนุญาตให้เขียนไฟล์");
     }
+
+    const writable = await fileHandle.createWritable();
+    const out = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    await writable.write(out);
+    await writable.close();
+
+    Swal.close();
+    showSuccess("บันทึกสำเร็จ", "Data updated!");
+
+    clearAudiogramInputs();
+    showSpecimen();
+    closemodal();
+
+  } catch (err) {
+    Swal.close();
+    showError(err.message || "บันทึกไม่สำเร็จ");
+  }
+}
 
     // ====== DELETE ROW (ลบจริงใน Specimen sheet) ======
     async function deleteSpecimenRow(sheetRowIndex) {
@@ -691,6 +942,25 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     renderCountsFromTable();
   }
 }
+
+    function openTest() {
+      document.getElementById("audiotest").style.display = "block";
+    }
+
+  
+
+    function clearAudiogramInputs() {
+
+      const ids = [
+        "r500", "r1000", "r2000", "r3000", "r4000", "r6000", "r8000",
+        "L500", "L1000", "L2000", "L3000", "L4000", "L6000", "L8000"
+      ];
+
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = "";
+      });
+    }
   </script>
 
   <!-- JavaScript Libraries -->
@@ -710,9 +980,3 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
 
 </html>
-
-
-
-
-
-
