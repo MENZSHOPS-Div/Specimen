@@ -524,7 +524,7 @@ function loadDataSheet() {
         const name = (document.getElementById("showname")?.textContent || "").trim();
         if (!id || !name) return showWarning("ต้องค้นหา ID ให้พบก่อน");
 
-        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen1");
         if (!specName) return showError('ไม่พบชีตชื่อ "Specimen"');
 
         showLoading("กำลังบันทึกข้อมูล...");
@@ -606,7 +606,7 @@ function loadDataSheet() {
         });
         if (!confirm.isConfirmed) return;
 
-        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen1");
         if (!specName) return showError('ไม่พบชีตชื่อ "Specimen"');
 
         showLoading("กำลังลบข้อมูล...");
@@ -649,7 +649,7 @@ function loadDataSheet() {
     function showSpecimen() {
       if (!workbook) return;
 
-      const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+      const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen1");
       if (!specName) return;
 
       const ws = workbook.Sheets[specName];
