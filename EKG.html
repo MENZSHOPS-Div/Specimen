@@ -503,7 +503,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
         const name = (document.getElementById("showname")?.textContent || "").trim();
         if (!id || !name) return showWarning("ต้องค้นหา ID ให้พบก่อน");
 
-        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen1");
         if (!specName) return showError('ไม่พบชีตชื่อ "Specimen"');
 
         showLoading("กำลังบันทึกข้อมูล...");
@@ -562,7 +562,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
 
         if (!confirm.isConfirmed) return;
 
-        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+        const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen1");
         if (!specName) return showError('ไม่พบชีตชื่อ "Specimen"');
 
         showLoading("กำลังลบข้อมูล...");
@@ -633,7 +633,7 @@ l32.416,32.416L194.013,135.402z M263.779,88.892L208.108,33.22l9.161-9.161l55.671
     function showSpecimen() {
   if (!workbook) return;
 
-  const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen");
+  const specName = workbook.SheetNames.find(n => n.trim().toLowerCase() === "specimen1");
   if (!specName) return;
 
   const ws = workbook.Sheets[specName];
